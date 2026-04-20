@@ -429,6 +429,7 @@
     document.getElementById('open-btn').addEventListener('click', () => {
       audio.play();
       goTo(1);
+      setTimeout(() => playBtn.click(), 400);
     });
 
     const pages = Array.from(document.querySelectorAll('.page'));

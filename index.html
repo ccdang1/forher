@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy 2 Years ❤️</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #1a1a2e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: Georgia, serif;
+      color: #fff;
+      padding: 1rem;
+      user-select: none;
+    }
+
+    .book-wrap {
+      position: relative;
+      width: 360px;
+      height: 500px;
+    }
+
+    .page {
+      position: absolute;
+      inset: 0;
+      border-radius: 4px 16px 16px 4px;
+      box-shadow: -6px 6px 30px rgba(0,0,0,0.6), 6px 0 12px rgba(0,0,0,0.3);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      overflow: hidden;
+      animation: turnIn 0.4s ease;
+    }
+
+    .page.active { display: flex; }
+
+    @keyframes turnIn {
+      from { transform: rotateY(-20deg) scale(0.97); opacity: 0.3; }
+      to   { transform: rotateY(0deg)  scale(1);    opacity: 1;   }
+    }
+
+    /* Photo pages */
+    .page img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .page video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.75));
+      color: #fff;
+      padding: 2rem 1.2rem 1rem;
+      font-size: 0.9rem;
+      text-align: center;
+      letter-spacing: 0.03em;
+    }
+
+    /* Section title pages */
+    .section-page {
+      background: linear-gradient(135deg, #2d1b3d, #1a1a2e);
+      text-align: center;
+      gap: 0.8rem;
+      padding: 2rem;
+      border-left: 4px solid #f9c5d1;
+    }
+
+    .section-page .section-emoji { font-size: 3.5rem; }
+    .section-page .section-title {
+      font-size: 1.6rem;
+      color: #f9c5d1;
+      letter-spacing: 0.1em;
+    }
+    .section-page .section-sub {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.08em;
+    }
+
+    /* Special slides */
+    .cover-page {
+      background: linear-gradient(160deg, #2d1020, #1a1a2e 60%, #0d1a2d);
+      text-align: center;
+      gap: 1rem;
+      padding: 2rem;
+    }
+    .cover-page .cover-heart { font-size: 4rem; animation: pulse 2s infinite; }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
+    .cover-page h1 { font-size: 1.8rem; color: #f9c5d1; line-height: 1.3; }
+    .cover-page p { font-size: 0.95rem; color: rgba(255,255,255,0.55); letter-spacing: 0.05em; }
+
+    .love-page {
+      background: linear-gradient(160deg, #2d1020, #1a1a2e);
+      padding: 2rem 2rem;
+      text-align: left;
+      gap: 0;
+      justify-content: flex-start;
+    }
+    .love-page h2 {
+      color: #f9c5d1;
+      font-size: 1.2rem;
+      margin-bottom: 1.2rem;
+      text-align: center;
+      width: 100%;
+      letter-spacing: 0.08em;
+    }
+    .love-page ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      width: 100%;
+    }
+    .love-page ul li {
+      font-size: 0.92rem;
+      color: rgba(255,255,255,0.85);
+      padding-left: 1.5rem;
+      position: relative;
+      line-height: 1.5;
+    }
+    .love-page ul li::before {
+      content: "♡";
+      position: absolute;
+      left: 0;
+      color: #f9c5d1;
+    }
+
+    .closing-page {
+      background: linear-gradient(160deg, #2d1020, #1a1a2e 60%, #0d1a2d);
+      text-align: center;
+      gap: 1.2rem;
+      padding: 2.5rem;
+    }
+    .closing-page .big { font-size: 3rem; }
+    .closing-page h2 { font-size: 1.5rem; color: #f9c5d1; line-height: 1.4; }
+    .closing-page p { font-size: 0.9rem; color: rgba(255,255,255,0.55); line-height: 1.7; }
+
+    /* Page number badge */
+    .badge {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      background: rgba(0,0,0,0.45);
+      color: rgba(255,255,255,0.7);
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-family: sans-serif;
+    }
+
+    /* Controls */
+    .progress {
+      width: 360px;
+      height: 3px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px;
+      margin-top: 1.2rem;
+    }
+    .progress-fill {
+      height: 100%;
+      background: #f9c5d1;
+      border-radius: 2px;
+      transition: width 0.35s ease;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      margin-top: 1rem;
+    }
+
+    button {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      padding: 0.5rem 1.2rem;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+    button:hover { background: rgba(255,255,255,0.18); }
+    button:disabled { opacity: 0.25; cursor: default; }
+
+    #play-btn {
+      background: #f9c5d1;
+      color: #5a2a3a;
+      border-color: #f9c5d1;
+      font-weight: bold;
+      min-width: 90px;
+    }
+    #play-btn:hover { background: #ffaec0; }
+
+    #open-btn {
+      margin-top: 1rem;
+      background: #f9c5d1;
+      color: #5a2a3a;
+      border: none;
+      padding: 0.7rem 2rem;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-family: Georgia, serif;
+      cursor: pointer;
+      font-weight: bold;
+      animation: pulse 2s infinite;
+    }
+    #open-btn:hover { background: #ffaec0; }
+
+    .counter {
+      font-size: 0.8rem;
+      opacity: 0.45;
+      font-family: sans-serif;
+      min-width: 55px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="book-wrap" id="book">
+
+    <!-- COVER -->
+    <div class="page cover-page active">
+      <div class="cover-heart">❤️</div>
+      <h1>Two Years<br/>of Us</h1>
+      <p>every moment, every memory</p>
+      <button id="open-btn">Open ❤️</button>
+    </div>
+
+    <!-- SECTION: US / EVERYDAY -->
+    <div class="page section-page">
+      <div class="section-emoji">🏠</div>
+      <div class="section-title">Just Us</div>
+      <div class="section-sub">the everyday moments</div>
+    </div>
+
+    <div class="page">
+      <img src="images/My favourite photo.jpg" alt="" />
+      <div class="caption">My favourite photo of us 🤍</div>
+    </div>
+
+    <div class="page">
+      <img src="images/best friends 4 lyf.jpg" alt="" />
+      <div class="caption">Best friends for life 💛</div>
+    </div>
+
+    <div class="page">
+      <img src="images/matching sweaters.jpg" alt="" />
+      <div class="caption">Matching sweaters ✨</div>
+    </div>
+
+    <div class="page">
+      <img src="images/home snores louder than me.jpg" alt="" />
+      <div class="caption">Home is wherever you are </div>
+    </div>
+
+    <div class="page">
+      <img src="images/my favourite snack.jpg" alt="" />
+      <div class="caption">My favourite snack 🥰</div>
+    </div>
+
+    <div class="page">
+      <video id="vid-funny" src="images/funny moments.mp4" muted playsinline></video>
+      <div class="caption">The funny moments I'll never forget 😂</div>
+    </div>
+
+    <!-- SECTION: BALI -->
+    <div class="page section-page">
+      <div class="section-emoji">🌴</div>
+      <div class="section-title">Bali</div>
+      <div class="section-sub">our first holiday together</div>
+    </div>
+
+    <div class="page">
+      <img src="images/before bali.jpg" alt="" />
+      <div class="caption">Before Bali — the excitement was real 🛫</div>
+    </div>
+
+    <div class="page">
+      <img src="images/Bali.jpg" alt="" />
+      <div class="caption">Bali 🌺</div>
+    </div>
+
+    <div class="page">
+      <img src="images/bali couples photo.jpg" alt="" />
+      <div class="caption">Us in paradise 🥥</div>
+    </div>
+
+    <div class="page">
+      <img src="images/bali fins.jpg" alt="" />
+      <div class="caption">Ocean adventures 🐠</div>
+    </div>
+
+    <!-- SECTION: DATES -->
+    <div class="page section-page">
+      <div class="section-emoji">🍽️</div>
+      <div class="section-title">Our Dates</div>
+      <div class="section-sub">every outing, every adventure</div>
+    </div>
+
+    <div class="page">
+      <img src="images/ART MUSEUM.jpg" alt="" />
+      <div class="caption">Art museum vibes 🎨</div>
+    </div>
+
+    <div class="page">
+      <img src="images/dinner in the city.jpg" alt="" />
+      <div class="caption">Dinner in the city ✨</div>
+    </div>
+
+    <div class="page">
+      <img src="images/Baddie at entrecote.jpg" alt="" />
+      <div class="caption">Baddie at Entrecote 🥩</div>
+    </div>
+
+    <div class="page">
+      <img src="images/Healesville Sanctuary .jpg" alt="" />
+      <div class="caption">Healesville Sanctuary 🦘</div>
+    </div>
+
+    <div class="page">
+      <img src="images/Heavesville sanct.jpg" alt="" />
+      <div class="caption">Wildlife adventures 🐨</div>
+    </div>
+
+    <!-- SECTION: JAPAN -->
+    <div class="page section-page">
+      <div class="section-emoji">🇯🇵</div>
+      <div class="section-title">Japan</div>
+      <div class="section-sub">our favourite trip</div>
+    </div>
+
+    <div class="page">
+      <img src="images/first kisaki.jpg" alt="" />
+      <div class="caption">First Kisaki in Japan 🍣</div>
+    </div>
+
+    <div class="page">
+      <img src="images/First meal in JAPAN.jpg" alt="" />
+      <div class="caption">First meal in Japan 🍜</div>
+    </div>
+
+    <div class="page">
+      <img src="images/JAPAN Osaka.jpg" alt="" />
+      <div class="caption">Osaka 🏙️</div>
+    </div>
+
+    <div class="page">
+      <img src="images/osaka mario kart.jpg" alt="" />
+      <div class="caption">Mario Kart in Osaka 🏎️</div>
+    </div>
+
+    <div class="page">
+      <img src="images/photoshoot in kimonos.jpg" alt="" />
+      <div class="caption">Kimonos 🎎</div>
+    </div>
+
+    <div class="page">
+      <img src="images/delicious.jpg" alt="" />
+      <div class="caption">Delicious 😋</div>
+    </div>
+
+    <div class="page">
+      <img src="images/tokyo.jpg" alt="" />
+      <div class="caption">Tokyo nights 🗼</div>
+    </div>
+
+    <!-- THINGS I LOVE ABOUT YOU -->
+    <div class="page love-page">
+      <h2>Things I love about you</h2>
+      <ul>
+        <li>You are the kindest, most genuine person I know</li>
+        <li>Your smile</li>
+        <li>How thoughtful you are, always making sure I feel taken care of</li>
+        <li>The way you make everywhere feel like home</li>
+        <li>Every adventure is better because you're in it</li>
+        <li>You dual wield when picking your nose 🤌</li>
+      </ul>
+    </div>
+
+    <!-- CLOSING -->
+    <div class="page closing-page">
+      <div class="big">🥂</div>
+      <h2>Happy 2 Years,<br/>my love</h2>
+      <p>Two years of memories, laughter,<br/>adventures, and love.<br/><br/>
+      Here's to a lifetime more. ❤️</p>
+    </div>
+
+  </div><!-- end book-wrap -->
+
+  <div class="progress">
+    <div class="progress-fill" id="progress-fill"></div>
+  </div>
+
+  <div class="controls">
+    <button id="prev-btn" disabled>← Prev</button>
+    <button id="play-btn">▶ Play</button>
+    <button id="next-btn">Next →</button>
+  </div>
+
+  <div class="counter" id="counter"></div>
+
+  <script>
+    const audio = new Audio("music/Daniel Caesar - Best Part (Audio) ft. H.E.R..mp3");
+    audio.loop = true;
+    audio.volume = 0.5;
+
+    document.getElementById('open-btn').addEventListener('click', () => {
+      audio.play();
+      goTo(1);
+    });
+
+    const pages = Array.from(document.querySelectorAll('.page'));
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const playBtn = document.getElementById('play-btn');
+    const counter = document.getElementById('counter');
+    const progressFill = document.getElementById('progress-fill');
+    const video = document.getElementById('vid-funny');
+
+    let current = 0;
+    let playing = false;
+    let interval = null;
+
+    // Add page number badges
+    pages.forEach((p, i) => {
+      const badge = document.createElement('div');
+      badge.className = 'badge';
+      badge.textContent = `${i + 1} / ${pages.length}`;
+      p.appendChild(badge);
+    });
+
+    function goTo(index) {
+      pages[current].classList.remove('active');
+      // Pause video if leaving video page
+      if (video && pages[current].contains(video)) video.pause();
+
+      current = index;
+      pages[current].classList.add('active');
+
+      // Play video if entering video page
+      if (video && pages[current].contains(video)) video.play();
+
+      prevBtn.disabled = current === 0;
+      nextBtn.disabled = current === pages.length - 1;
+      counter.textContent = `${current + 1} / ${pages.length}`;
+      progressFill.style.width = `${((current + 1) / pages.length) * 100}%`;
+    }
+
+    goTo(0);
+
+    prevBtn.addEventListener('click', () => { if (current > 0) goTo(current - 1); });
+    nextBtn.addEventListener('click', () => { if (current < pages.length - 1) goTo(current + 1); });
+
+    playBtn.addEventListener('click', () => {
+      if (playing) {
+        clearInterval(interval);
+        playing = false;
+        playBtn.textContent = '▶ Play';
+      } else {
+        if (current === pages.length - 1) goTo(0);
+        playing = true;
+        playBtn.textContent = '⏸ Pause';
+        const lovePageIndex = pages.indexOf(document.querySelector('.love-page'));
+        let arrivedAt = Date.now();
+        interval = setInterval(() => {
+          // If on the video page, wait for it to finish
+          if (video && pages[current].contains(video)) return;
+          // Give the love page 8 seconds to read
+          if (current === lovePageIndex && Date.now() - arrivedAt < 8000) return;
+          if (current < pages.length - 1) {
+            goTo(current + 1);
+            arrivedAt = Date.now();
+          } else {
+            clearInterval(interval);
+            playing = false;
+            playBtn.textContent = '▶ Play';
+          }
+        }, 2500);
+
+        // When video ends, advance immediately
+        video.addEventListener('ended', () => {
+          if (playing && pages[current].contains(video)) {
+            if (current < pages.length - 1) goTo(current + 1);
+          }
+        }, { once: false });
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' && current < pages.length - 1) goTo(current + 1);
+      if (e.key === 'ArrowLeft'  && current > 0)               goTo(current - 1);
+      if (e.key === ' ') { e.preventDefault(); playBtn.click(); }
+    });
+  </script>
+
+</body>
+</html>

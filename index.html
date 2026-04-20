@@ -286,6 +286,16 @@
       <div class="caption">The funny moments I'll never forget 😂</div>
     </div>
 
+    <div class="page">
+      <video id="vid-love-heart" src="images/Love heart eyes.mp4" muted playsinline></video>
+      <div class="caption">Hearts for you 😍</div>
+    </div>
+
+    <div class="page">
+      <img src="images/Not looking cause you make me rock hard.jpg" alt="" />
+      <div class="caption">Not looking cause you make me rock hard 🗿</div>
+    </div>
+
     <!-- SECTION: BALI -->
     <div class="page section-page">
       <div class="section-emoji">🌴</div>
@@ -440,6 +450,10 @@
     const counter = document.getElementById('counter');
     const progressFill = document.getElementById('progress-fill');
     const video = document.getElementById('vid-funny');
+    const videoLove = document.getElementById('vid-love-heart');
+    const allVideos = [video, videoLove];
+
+    function currentVideo() { return allVideos.find(v => v && pages[current].contains(v)) || null; }
 
     let current = 0;
     let playing = false;
@@ -455,14 +469,14 @@
 
     function goTo(index) {
       pages[current].classList.remove('active');
-      // Pause video if leaving video page
-      if (video && pages[current].contains(video)) video.pause();
+      const leaving = currentVideo();
+      if (leaving) leaving.pause();
 
       current = index;
       pages[current].classList.add('active');
 
-      // Play video if entering video page
-      if (video && pages[current].contains(video)) video.play();
+      const entering = currentVideo();
+      if (entering) entering.play();
 
       prevBtn.disabled = current === 0;
       nextBtn.disabled = current === pages.length - 1;
@@ -485,12 +499,13 @@
         playing = true;
         playBtn.textContent = '⏸ Pause';
         const lovePageIndex = pages.indexOf(document.querySelector('.love-page'));
-        let arrivedAt = Date.now();
+let arrivedAt = Date.now();
         interval = setInterval(() => {
-          // If on the video page, wait for it to finish
-          if (video && pages[current].contains(video)) return;
-          // Give the love page 8 seconds to read
+          // If on a video page, wait for it to finish
+          if (currentVideo()) return;
+          // Give slow pages 8 seconds
           if (current === lovePageIndex && Date.now() - arrivedAt < 8000) return;
+          if (current === 9 && Date.now() - arrivedAt < 3000) return;
           if (current < pages.length - 1) {
             goTo(current + 1);
             arrivedAt = Date.now();
@@ -501,12 +516,12 @@
           }
         }, 2500);
 
-        // When video ends, advance immediately
-        video.addEventListener('ended', () => {
-          if (playing && pages[current].contains(video)) {
-            if (current < pages.length - 1) goTo(current + 1);
+        // When any video ends, advance immediately
+        allVideos.forEach(v => v && v.addEventListener('ended', () => {
+          if (playing && pages[current].contains(v)) {
+            if (current < pages.length - 1) { goTo(current + 1); arrivedAt = Date.now(); }
           }
-        }, { once: false });
+        }));
       }
     });
 
